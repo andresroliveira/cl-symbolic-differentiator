@@ -1,0 +1,44 @@
+* CL-Symbolic-Differentiator
+
+Um sistema de álgebra computacional (CAS) minimalista escrito em **Common Lisp** capaz de realizar diferenciação simbólica e simplificação algébrica.
+
+Este projeto demonstra o paradigma "Code as Data" do Lisp, manipulando árvores de expressão matemática nativamente.
+
+** Funcionalidades Atuais
+
+- [X] Derivação de constantes e variáveis
+- [X] Regras de Soma e Subtração
+- [X] Regra do Produto e Quociente
+- [X] Regra da Potência (Polynomial differentiation)
+- [X] Simplificação básica de expressões (ex: ~x + 0 -> x~, ~x * 1 -> x~)
+
+** Como Usar
+
+Requer um ambiente Common Lisp (recomendado: SBCL + Emacs/SLIME).
+
+1. Clone o repositório.
+2. Abra o arquivo ~diferenciador.lisp~.
+3. Compile o buffer (~C-c C-k~ no SLIME).
+4. Execute as funções no REPL:
+
+#+BEGIN_SRC lisp
+;; Derivada de x^2
+(simplificar (deriv '(expt x 2) 'x))
+;; Resultado: (* 2 X)
+
+;; Derivada de um polinômio: 3x^3 - 5x^2 + 10
+(simplificar (deriv '(- (+ (* 3 (expt x 3)) (* -5 (expt x 2))) 10) 'x))
+;; Resultado: (+ (* 3 (* 3 (EXPT X 2))) (* -5 (* 2 X)))
+#+END_SRC
+
+** Estrutura do Projeto
+
+O núcleo do projeto consiste em duas funções principais recursivas:
+- ~deriv~: Aplica regras de cálculo diferencial percorrendo a AST (Abstract Syntax Tree).
+- ~simplificar~: Reduz a expressão resultante removendo redundâncias aritméticas.
+
+** Roadmap
+
+- [ ] Melhorar o algoritmo de simplificação (Constant Folding)
+- [ ] Suporte a funções trigonométricas (sin, cos)
+- [ ] Suporte a exponencial e logaritmo (exp, log)
