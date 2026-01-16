@@ -2,43 +2,44 @@
 
 Um sistema de álgebra computacional (CAS) minimalista escrito em **Common Lisp** capaz de realizar diferenciação simbólica e simplificação algébrica.
 
-Este projeto demonstra o paradigma "Code as Data" do Lisp, manipulando árvores de expressão matemática nativamente.
+Este projeto demonstra o poder da recursão e o paradigma "Code as Data" do Lisp, manipulando árvores de expressão matemática nativamente (AST).
 
-** Funcionalidades Atuais
+** Funcionalidades
 
-- [X] Derivação de constantes e variáveis
-- [X] Regras de Soma e Subtração
-- [X] Regra do Produto e Quociente
-- [X] Regra da Potência (Polynomial differentiation)
-- [X] Simplificação básica de expressões (ex: ~x + 0 -> x~, ~x * 1 -> x~)
+- [X] Derivação de polinômios complexos
+- [X] Regras de Soma, Subtração, Produto e Divisão
+- [X] Regra da Potência (Generalizada)
+- [X] Funções Transcendentes: ~sin~, ~cos~, ~exp~, ~log~
+- [X] Simplificação Algébrica com *Constant Folding* (ex: ~3 * 3 * x -> 9x~)
+- [X] Aplicação automática da **Regra da Cadeia**
 
 ** Como Usar
 
-Requer um ambiente Common Lisp (recomendado: SBCL + Emacs/SLIME).
+Requer um ambiente Common Lisp (SBCL + Emacs/SLIME recomendados).
 
 1. Clone o repositório.
 2. Abra o arquivo ~diferenciador.lisp~.
-3. Compile o buffer (~C-c C-k~ no SLIME).
-4. Execute as funções no REPL:
+3. Compile o buffer (~C-c C-k~).
+4. Execute no REPL:
 
 #+BEGIN_SRC lisp
-;; Derivada de x^2
-(simplificar (deriv '(expt x 2) 'x))
-;; Resultado: (* 2 X)
+;; 1. Regra da Cadeia com Trigonometria: sin(x^2)
+(simplificar (deriv '(sin (expt x 2)) 'x))
+;; Resultado: (* (COS (EXPT X 2)) (* 2 X))
+;; Matematiques: 2x * cos(x^2)
 
-;; Derivada de um polinômio: 3x^3 - 5x^2 + 10
+;; 2. Exponencial Composta: e^(3x)
+(simplificar (deriv '(exp (* 3 x)) 'x))
+;; Resultado: (* (EXP (* 3 X)) 3)
+;; Matematiques: 3 * e^(3x)
+
+;; 3. Polinômio: 3x^3 - 5x^2 + 10
 (simplificar (deriv '(- (+ (* 3 (expt x 3)) (* -5 (expt x 2))) 10) 'x))
-;; Resultado: (+ (* 3 (* 3 (EXPT X 2))) (* -5 (* 2 X)))
+;; Resultado: (+ (* 9 (EXPT X 2)) (* -10 X))
+;; Matematiques: 9x^2 - 10x
 #+END_SRC
 
-** Estrutura do Projeto
+** Estrutura do Código
 
-O núcleo do projeto consiste em duas funções principais recursivas:
-- ~deriv~: Aplica regras de cálculo diferencial percorrendo a AST (Abstract Syntax Tree).
-- ~simplificar~: Reduz a expressão resultante removendo redundâncias aritméticas.
-
-** Roadmap
-
-- [ ] Melhorar o algoritmo de simplificação (Constant Folding)
-- [ ] Suporte a funções trigonométricas (sin, cos)
-- [ ] Suporte a exponencial e logaritmo (exp, log)
+- ~deriv~: Função recursiva que mapeia a AST de entrada para sua derivada usando *pattern matching* manual.
+- ~simplificar~: Otimizador de AST que reduz expressões (ex: elimina multiplicações por 1, somas com 0 e agrupa constantes numéricas).
