@@ -1,4 +1,4 @@
-* CL-Symbolic-Differentiator
+* Symbolic-Differentiator
 
 Um sistema de álgebra computacional (CAS) minimalista escrito em **Common Lisp** capaz de realizar diferenciação simbólica e simplificação algébrica.
 
